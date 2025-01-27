@@ -1,16 +1,24 @@
+package Main;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 
 public class Asignatura {
-    String nombre;
-    Curso curso;
-    Estado estado;
-    int ECTS;
+    private String nombre;
+    private Curso curso;
+    private Estado estado;
+    private int ECTS;
+    public static List<Asignatura> asignaturas = new ArrayList<>();
 
-    public Asignatura(String nombre, Curso curso, Estado estado, int ECTS) {
+
+    public Asignatura(String nombre, Curso curso, int ECTS) {
         this.nombre = nombre;
         this.curso = curso;
-        this.estado = estado;
+        this.estado = null;
         this.ECTS = ECTS;
+        asignaturas.add(this);
     }
 
     public String getNombre() {
