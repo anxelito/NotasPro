@@ -1,19 +1,14 @@
 package GUI;
 
 import Main.*;
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 
 public class PanelAsig extends JFrame {
     private JPanel panel;
-    private JScrollPane scrollPanel;
-    private JTextArea etiquetaStatus;
-
+    private PanelTablaAsignaturas panelTabla = new PanelTablaAsignaturas();
 
 
     public PanelAsig(JFrame ventanaAnterior) {
@@ -28,7 +23,7 @@ public class PanelAsig extends JFrame {
         panel.setLayout(null);
         this.setContentPane(panel);
 
-        actualizarEtiqueta(Asignatura.asignaturas.toString());
+        panelTabla.actualizarTabla();
         
         colocarEtiquetasAsig();
         colocarBotonesAsig(ventanaAnterior);
@@ -45,7 +40,8 @@ public class PanelAsig extends JFrame {
     }
 
     private void colocarBotonesAsig(JFrame ventanaAnterior) {
-        crearBoton("Añadir Asignatura", 20, 130, 140, 20, Color.blue, e -> añadirAsig());
+        crearBoton("Añadir Asignatura", 20, 130, 140, 20, Color.white, e -> añadirAsig());
+        crearBoton("Añadir Prueba", 170, 130, 140, 20, Color.cyan, e -> añadirPrueba());
         crearBoton("<-", 20, 360, 40, 40, Color.red, e -> {
             ventanaAnterior.setVisible(true);
             this.dispose();
@@ -66,7 +62,7 @@ public class PanelAsig extends JFrame {
 
     private void añadirAsig() {       
         JFrame nuevaVentana = new JFrame("Nueva Asignatura");
-        nuevaVentana.setSize(400, 200);
+        nuevaVentana.setSize(400, 250);
         nuevaVentana.setLocationRelativeTo(null); 
         nuevaVentana.setResizable(false);
         nuevaVentana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -115,7 +111,7 @@ public class PanelAsig extends JFrame {
 
                 // Crear asignatura
                 Asignatura nuevaAsignatura = new Asignatura(nombre, curso, ects);
-                actualizarEtiqueta(Asignatura.asignaturas.toString()); // Hacer un for para que recorra todo y un get name...
+                panelTabla.actualizarTabla();
                 JOptionPane.showMessageDialog(nuevaVentana, "Asignatura añadida con éxito:\n" + "Nombre: " + nombre + "\nCurso: " + curso + "\nECTS: " + ects, "Asignatura Añadida", JOptionPane.INFORMATION_MESSAGE);
                 nuevaVentana.dispose();
             } catch (NumberFormatException ex) {
@@ -134,8 +130,98 @@ public class PanelAsig extends JFrame {
         nuevaVentana.setVisible(true);
     }
     
+    private void añadirPrueba() {       
+        JFrame nuevaVentana = new JFrame("Nueva Prueba");
+        nuevaVentana.setSize(400, 300);
+        nuevaVentana.setLocationRelativeTo(null); 
+        nuevaVentana.setResizable(false);
+        nuevaVentana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        nuevaVentana.setLayout(null); 
+        
+         // Asignatura
+        JLabel lblAsig = new JLabel("Asignatura:");
+        lblAsig.setBounds(20, 20, 80, 25);
+        nuevaVentana.add(lblAsig);
+
+        JComboBox<Asignatura> cbAsig = new JComboBox<>(Asignatura.asignaturas.toArray(new Asignatura[0]));
+        cbAsig.setBounds(120, 20, 200, 25);
+        nuevaVentana.add(cbAsig);
+
+        // Nombre de la prueva
+        JLabel lblNombre = new JLabel("Nombre:");
+        lblNombre.setBounds(20, 60, 80, 25);
+        nuevaVentana.add(lblNombre);
+
+        JTextField txtNombre = new JTextField();
+        txtNombre.setBounds(120, 60, 200, 25);
+        nuevaVentana.add(txtNombre);
+        
+        // Nota Minima
+        JLabel lblNotaMin = new JLabel("Nota Minima:");
+        lblNotaMin.setBounds(20, 100, 80, 25);
+        nuevaVentana.add(lblNotaMin);
+
+        JTextField txtNotaMin = new JTextField();
+        txtNotaMin.setBounds(120, 100, 200, 25);
+        nuevaVentana.add(txtNotaMin);
+
+        // Nota
+        JLabel lblNota = new JLabel("Nota:");
+        lblNota.setBounds(20, 140, 80, 25);
+        nuevaVentana.add(lblNota);
+
+        JTextField txtNota = new JTextField();
+        txtNota.setBounds(120, 140, 200, 25);
+        nuevaVentana.add(txtNota);
+
+        // Ponderacion
+        JLabel lblPon = new JLabel("Ponderación %:");
+        lblPon.setBounds(20, 180, 100, 25);
+        nuevaVentana.add(lblPon);
+
+        JTextField txtPon = new JTextField();
+        txtPon.setBounds(120, 180, 200, 25);
+        nuevaVentana.add(txtPon);
+
+        // Añadir
+        JButton btnAñadir = new JButton("Añadir");
+        btnAñadir.setBounds(80, 220, 100, 30);
+        btnAñadir.addActionListener(e -> {
+            try {
+                String nombre = txtNombre.getText();
+                double nota = Double.parseDouble(txtNota.getText());
+                int notaMin = Integer.parseInt(txtNota.getText());
+                int pon = Integer.parseInt(txtPon.getText());
+                Asignatura asig = (Asignatura) cbAsig.getSelectedItem();
+
+                if (nombre.isEmpty()) {
+                    JOptionPane.showMessageDialog(nuevaVentana, "El nombre no puede estar vacío.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Crear prueba
+                asig.addExamen(new Examen(nombre, pon, notaMin, nota));
+                panelTabla.actualizarTabla();
+                JOptionPane.showMessageDialog(nuevaVentana, "Prueba añadida con éxito:\n" + "Nombre: " + nombre + "\nNota: " + nota + "\nNota Minima: " + notaMin, "Asignatura Añadida", JOptionPane.INFORMATION_MESSAGE);
+                nuevaVentana.dispose();
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(nuevaVentana, "El valor de % debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        nuevaVentana.add(btnAñadir);
+        
+
+        // Salir
+        JButton btnSalir = new JButton("Salir");
+        btnSalir.setBounds(200, 220, 100, 30);
+        btnSalir.addActionListener(e -> nuevaVentana.dispose());
+        nuevaVentana.add(btnSalir);
+
+        nuevaVentana.setVisible(true);
+    }
+
     private void mostrarTabla() {
-        PanelTablaAsignaturas panelTabla = new PanelTablaAsignaturas();
+        
         panelTabla.setBounds(20, 160, 400, 190); // Posición y tamaño dentro del panel principal
         panelTabla.setBackground(new Color(0, 0, 0, 150)); // Fondo translúcido opcional para contraste
         panelTabla.setOpaque(true);
@@ -145,30 +231,5 @@ public class PanelAsig extends JFrame {
         panel.revalidate();
         panel.repaint();
     }
-    
-    public void actualizarEtiqueta(String contenido){
-        limpiarPanel();
-        etiquetaStatus = new JTextArea(contenido);
-        etiquetaStatus.setEditable(false);
-        etiquetaStatus.setLineWrap(true);
-        etiquetaStatus.setWrapStyleWord(true);
-        etiquetaStatus.setForeground(Color.white);
-        etiquetaStatus.setFont(new Font("Arial", Font.BOLD, 17));
-        etiquetaStatus.setOpaque(false);
-        
-        scrollPanel = new JScrollPane(etiquetaStatus);
-        scrollPanel.setBounds(20, 150, 130, 86);
-        scrollPanel.setOpaque(false);
-        scrollPanel.getViewport().setOpaque(false);
-        scrollPanel.setBorder(null);
-        panel.add(scrollPanel);
-
-        panel.revalidate();
-        panel.repaint(); 
-    } 
-
-    private void limpiarPanel() {
-        
-    }
-    
+      
 }

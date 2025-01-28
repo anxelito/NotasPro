@@ -14,12 +14,13 @@ public class Examen {
     private Estado estado;
     public static List<Examen> examenes = new ArrayList<>();
 
-    public Examen(String nombre, int ponderacion, int notaMin, double nota, Estado estado) {
+    public Examen(String nombre, int ponderacion, int notaMin, double nota) {
         this.nombre = nombre;
         this.ponderacion = ponderacion;
         this.notaMin = notaMin;
         this.nota = nota;
-        this.estado = estado;
+        if (nota>=notaMin) this.estado = Estado.APROVADA;
+        else this.estado = Estado.SUSPENSA;
         examenes.add(this);
     }
 
