@@ -1,10 +1,13 @@
 package GUI;
 
 import Main.*;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 public class PanelAsig extends JFrame {
     private JPanel panel;
@@ -29,6 +32,8 @@ public class PanelAsig extends JFrame {
         
         colocarEtiquetasAsig();
         colocarBotonesAsig(ventanaAnterior);
+        mostrarTabla();
+       
     }
 
     private void colocarEtiquetasAsig() {
@@ -127,6 +132,18 @@ public class PanelAsig extends JFrame {
         nuevaVentana.add(btnSalir);
 
         nuevaVentana.setVisible(true);
+    }
+    
+    private void mostrarTabla() {
+        PanelTablaAsignaturas panelTabla = new PanelTablaAsignaturas();
+        panelTabla.setBounds(20, 160, 400, 190); // Posición y tamaño dentro del panel principal
+        panelTabla.setBackground(new Color(0, 0, 0, 150)); // Fondo translúcido opcional para contraste
+        panelTabla.setOpaque(true);
+
+        panel.add(panelTabla);
+
+        panel.revalidate();
+        panel.repaint();
     }
     
     public void actualizarEtiqueta(String contenido){
