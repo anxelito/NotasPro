@@ -6,15 +6,15 @@ import java.util.List;
 
 
 
-public class Examen {
+public class Prueba {
     private String nombre;
     private int ponderacion;
     private int notaMin;
     private double nota;
     private Estado estado;
-    public static List<Examen> examenes = new ArrayList<>();
+    public static List<Prueba> examenes = new ArrayList<>();
 
-    public Examen(String nombre, int ponderacion, int notaMin, double nota) {
+    public Prueba(String nombre, int ponderacion, int notaMin, double nota) {
         this.nombre = nombre;
         this.ponderacion = ponderacion;
         this.notaMin = notaMin;
@@ -22,6 +22,10 @@ public class Examen {
         if (nota>=notaMin) this.estado = Estado.APROVADA;
         else this.estado = Estado.SUSPENSA;
         examenes.add(this);
+    }
+    
+    public double getNotaPonderada() {
+        return (nota * ponderacion) / 100.0;
     }
 
     public String getNombre() {
@@ -64,12 +68,12 @@ public class Examen {
         this.estado = estado;
     }
 
-    public static List<Examen> getExamenes() {
+    public static List<Prueba> getExamenes() {
         return examenes;
     }
 
-    public static void setExamenes(List<Examen> examenes) {
-        Examen.examenes = examenes;
+    public static void setExamenes(List<Prueba> examenes) {
+        Prueba.examenes = examenes;
     }
 
 }

@@ -200,7 +200,8 @@ public class PanelAsig extends JFrame {
                 }
 
                 // Crear prueba
-                asig.addExamen(new Examen(nombre, pon, notaMin, nota));
+                asig.addExamen(new Prueba(nombre, pon, notaMin, nota));
+                asig.calcularEstado();
                 panelTabla.actualizarTabla();
                 JOptionPane.showMessageDialog(nuevaVentana, "Prueba añadida con éxito:\n" + "Nombre: " + nombre + "\nNota: " + nota + "\nNota Minima: " + notaMin, "Asignatura Añadida", JOptionPane.INFORMATION_MESSAGE);
                 nuevaVentana.dispose();

@@ -1,7 +1,7 @@
 package GUI;
 
 import Main.Asignatura;
-import Main.Examen;
+import Main.Prueba;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -18,6 +18,7 @@ public class PanelTablaAsignaturas extends JPanel {
         for (Asignatura asignatura : Asignatura.asignaturas) {
             String nombre = asignatura.getNombre();
             String curso = asignatura.getCurso().name(); 
+            asignatura.calcularEstado();
             String estado = asignatura.getEstado() != null ? asignatura.getEstado().name() : "Sin estado";
             modeloTabla.addRow(new Object[]{nombre, curso, estado});
         }
@@ -49,7 +50,7 @@ public class PanelTablaAsignaturas extends JPanel {
         String[] columnasExamenes = {"Nombre", "Nota", "Estado"};
         DefaultTableModel modeloExamenes = new DefaultTableModel(columnasExamenes, 0);
 
-        for (Examen examen : asignaturaSeleccionada.getExamenes()) {
+        for (Prueba examen : asignaturaSeleccionada.getPruebas()) {
             modeloExamenes.addRow(new Object[]{
                 examen.getNombre(),
                 examen.getNota(),

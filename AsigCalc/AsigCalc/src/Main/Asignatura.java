@@ -10,7 +10,7 @@ public class Asignatura {
     private Curso curso;
     private Estado estado;
     private int ECTS;
-    private List<Examen> examenes;
+    private List<Prueba> pruebas;
     public static List<Asignatura> asignaturas = new ArrayList<>();
     
 
@@ -20,16 +20,37 @@ public class Asignatura {
         this.curso = curso;
         this.estado = null;
         this.ECTS = ECTS;
-        this.examenes = new ArrayList<>();
+        this.pruebas = new ArrayList<>();
         asignaturas.add(this);
     }
     
-    public void addExamen(Examen examen){
-        examenes.add(examen);
+    public void calcularEstado() {
+        double sumaNotas = 0;
+        boolean todasAprobadas = true;
+
+        for (Prueba prueba : pruebas) {
+            if (prueba.getEstado() != Estado.APROVADA) {
+                todasAprobadas = false; 
+                break;
+            }
+            sumaNotas += prueba.getNotaPonderada();  
+        }
+
+        if (todasAprobadas && sumaNotas / pruebas.size() >= 5) {
+            this.estado = Estado.APROVADA;
+        } else {
+            this.estado = Estado.SUSPENSA;
+        }
+    }
+
+
+    
+    public void addExamen(Prueba examen){
+        pruebas.add(examen);
     }
     
-    public List<Examen> getExamenes() {
-        return examenes;
+    public List<Prueba> getPruebas() {
+        return pruebas;
     }
 
     public String getNombre() {
