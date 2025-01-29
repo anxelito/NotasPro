@@ -72,12 +72,12 @@ public class PanelTablaAsignaturas extends JPanel {
     }
 
     public void actualizarTabla() {
-        modeloTabla.setRowCount(0); // Limpiamos la tabla
+        modeloTabla.setRowCount(0);
 
         if (asignaturas != null && !asignaturas.isEmpty()) {
             for (Asignatura asignatura : asignaturas) {
-                asignatura.notaFinal(); // Calculamos la nota media antes de obtenerla
-                asignatura.calcularEstado(); // Recalculamos el estado
+                asignatura.notaFinal(); 
+                asignatura.calcularEstado(); 
 
                 String nombre = asignatura.getNombre();
                 String curso = asignatura.getCurso().name(); 
@@ -87,7 +87,7 @@ public class PanelTablaAsignaturas extends JPanel {
 
                 modeloTabla.addRow(new Object[]{nombre, curso, estado, creditos, notaMedia});
             }
-            modeloTabla.fireTableDataChanged(); // Actualizamos la tabla después de llenarla
+            modeloTabla.fireTableDataChanged(); 
         } else {
             System.out.println("No hay asignaturas para mostrar.");
         }

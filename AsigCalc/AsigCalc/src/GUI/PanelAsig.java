@@ -9,7 +9,7 @@ import javax.swing.*;
 
 public class PanelAsig extends JFrame {
     private JPanel panel;
-    private PanelTablaAsignaturas panelTabla = new PanelTablaAsignaturas();
+    public static PanelTablaAsignaturas panelTabla = new PanelTablaAsignaturas();
     private Asignatura asignatura;
 
     public PanelAsig(JFrame ventanaAnterior) {
@@ -63,8 +63,9 @@ public class PanelAsig extends JFrame {
     }
 
     private void colocarBotonesAsig(JFrame ventanaAnterior) {
-        crearBoton("Añadir Asignatura", 20, 130, 140, 20, Color.white, e -> añadirAsig());
-        crearBoton("Añadir Prueba", 170, 130, 140, 20, Color.cyan, e -> añadirPrueba());
+        crearBoton("Añadir Asig.", 20, 130, 120, 20, Color.white, e -> añadirAsig());
+        crearBoton("Editar/Eliminar",160, 130, 120, 20, Color.pink, e -> editarAsig());
+        crearBoton("Añadir Prueba", 300, 130, 120, 20, Color.cyan, e -> añadirPrueba());
         crearBoton("<-", 20, 360, 40, 40, Color.red, e -> {
             ventanaAnterior.setVisible(true);
             this.dispose();
@@ -152,6 +153,118 @@ public class PanelAsig extends JFrame {
         nuevaVentana.setVisible(true);
     }
     
+    private void editarAsig() {
+        JFrame nuevaVentana = new JFrame("Editar/Eliminar Asignatura");
+        nuevaVentana.setSize(400, 260);
+        nuevaVentana.setLocationRelativeTo(null); 
+        nuevaVentana.setResizable(false);
+        nuevaVentana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        nuevaVentana.setLayout(null); 
+
+        // Asignatura
+        JLabel lblAsig = new JLabel("Asignatura:");
+        lblAsig.setBounds(20, 20, 80, 25);
+        nuevaVentana.add(lblAsig);
+
+        JComboBox<Asignatura> cbAsig = new JComboBox<>(Asignatura.asignaturas.toArray(new Asignatura[0]));
+        cbAsig.setBounds(120, 20, 200, 25);
+        nuevaVentana.add(cbAsig);
+        
+        // Nuevo nombre de la asignatura
+        JLabel lblNombre = new JLabel("Nombre:");
+        lblNombre.setBounds(20, 60, 80, 25);
+        nuevaVentana.add(lblNombre);
+
+        JTextField txtNombre = new JTextField();
+        txtNombre.setBounds(120, 60, 200, 25);
+        nuevaVentana.add(txtNombre);
+
+        // Curso
+        JLabel lblCurso = new JLabel("Curso:");
+        lblCurso.setBounds(20, 100, 80, 25);
+        nuevaVentana.add(lblCurso);
+
+        JComboBox<Curso> cbCurso = new JComboBox<>(Curso.values());
+        cbCurso.setBounds(120, 100, 200, 25);
+        nuevaVentana.add(cbCurso);
+
+        // ECTS
+        JLabel lblECTS = new JLabel("ECTS:");
+        lblECTS.setBounds(20, 140, 80, 25);
+        nuevaVentana.add(lblECTS);
+
+        JTextField txtECTS = new JTextField();
+        txtECTS.setBounds(120, 140, 200, 25);
+        nuevaVentana.add(txtECTS);
+
+        // Añadir
+        JButton btnAñadir = new JButton("Actualizar");
+        btnAñadir.setBounds(35, 180, 100, 30);
+        btnAñadir.addActionListener(e -> {
+            try {
+                String nombre = txtNombre.getText();
+                Curso curso = (Curso) cbCurso.getSelectedItem();
+                int ects = Integer.parseInt(txtECTS.getText());
+                Asignatura asig = (Asignatura) cbAsig.getSelectedItem();
+
+                if (nombre.isEmpty()) {
+                    JOptionPane.showMessageDialog(nuevaVentana, "El nombre no puede estar vacío.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Editamos asignatura
+                asig.setNombre(nombre);
+                asig.setCurso(curso);
+                asig.setECTS(ects);
+                panelTabla.actualizarTabla();
+                JOptionPane.showMessageDialog(nuevaVentana, "Asignatura añadida con éxito:\n" + "Nombre: " + nombre + "\nCurso: " + curso + "\nECTS: " + ects, "Asignatura Añadida", JOptionPane.INFORMATION_MESSAGE);
+                nuevaVentana.dispose();
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(nuevaVentana, "El valor de ECTS debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        nuevaVentana.add(btnAñadir);
+        
+        // Eliminar
+        JButton btnElim = new JButton("Eliminar");
+        btnElim.setBounds(140, 180, 100, 30);
+        btnElim.addActionListener(e -> {
+            Asignatura asig = (Asignatura) cbAsig.getSelectedItem();
+    
+            if (asig != null) {
+                int confirm = JOptionPane.showConfirmDialog(nuevaVentana, 
+                    "¿Estás seguro de que quieres eliminar la asignatura " + asig.getNombre() + "?", 
+                    "Confirmar eliminación", 
+                    JOptionPane.YES_NO_OPTION, 
+                    JOptionPane.WARNING_MESSAGE);
+
+                if (confirm == JOptionPane.YES_OPTION) {
+                    Asignatura.asignaturas.remove(asig);
+                    cbAsig.removeItem(asig); 
+                    panelTabla.actualizarTabla();
+                    JOptionPane.showMessageDialog(nuevaVentana, 
+                        "Asignatura eliminada con éxito.", 
+                        "Eliminación Exitosa", 
+                        JOptionPane.INFORMATION_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(nuevaVentana, 
+                    "No hay ninguna asignatura seleccionada.", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        nuevaVentana.add(btnElim);
+       
+        // Salir
+        JButton btnSalir = new JButton("Salir");
+        btnSalir.setBounds(245, 180, 100, 30);
+        btnSalir.addActionListener(e -> nuevaVentana.dispose());
+        nuevaVentana.add(btnSalir);
+
+        nuevaVentana.setVisible(true);
+    }
+    
     private void añadirPrueba() {       
         JFrame nuevaVentana = new JFrame("Nueva Prueba");
         nuevaVentana.setSize(400, 300);
@@ -160,7 +273,7 @@ public class PanelAsig extends JFrame {
         nuevaVentana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         nuevaVentana.setLayout(null); 
         
-         // Asignatura
+        // Asignatura
         JLabel lblAsig = new JLabel("Asignatura:");
         lblAsig.setBounds(20, 20, 80, 25);
         nuevaVentana.add(lblAsig);
@@ -261,7 +374,7 @@ public class PanelAsig extends JFrame {
     private JLabel etiquetaNotaMedia;
     private JLabel etiquetaCreditos;
 
-    private void actualizarNotaCreditos(Asignatura asig) {
+    public void actualizarNotaCreditos(Asignatura asig) {
         asig.notaMedia();
         asig.creditos();
         
