@@ -10,7 +10,6 @@ public class PanelAsig extends JFrame {
     private JPanel panel;
     private PanelTablaAsignaturas panelTabla = new PanelTablaAsignaturas();
 
-
     public PanelAsig(JFrame ventanaAnterior) {
         setSize(450, 450);
         setLocationRelativeTo(null);
@@ -32,6 +31,7 @@ public class PanelAsig extends JFrame {
     }
 
     private void colocarEtiquetasAsig() {
+        //Titulo
         JLabel etiqueta = new JLabel("Asignaturas", SwingConstants.CENTER);
         etiqueta.setBounds(25, 30, 400, 65);
         etiqueta.setForeground(Color.white);
@@ -119,8 +119,7 @@ public class PanelAsig extends JFrame {
             }
         });
         nuevaVentana.add(btnAñadir);
-        
-
+       
         // Salir
         JButton btnSalir = new JButton("Salir");
         btnSalir.setBounds(200, 140, 100, 30);
@@ -201,7 +200,10 @@ public class PanelAsig extends JFrame {
 
                 // Crear prueba
                 asig.addExamen(new Prueba(nombre, pon, notaMin, nota));
+                asig.notaFinal();
+                asig.notaMedia();
                 asig.calcularEstado();
+                actualizarNotaMedia(asig);
                 panelTabla.actualizarTabla();
                 JOptionPane.showMessageDialog(nuevaVentana, "Prueba añadida con éxito:\n" + "Nombre: " + nombre + "\nNota: " + nota + "\nNota Minima: " + notaMin, "Asignatura Añadida", JOptionPane.INFORMATION_MESSAGE);
                 nuevaVentana.dispose();
@@ -232,5 +234,24 @@ public class PanelAsig extends JFrame {
         panel.revalidate();
         panel.repaint();
     }
-      
+    
+   private JLabel etiquetaNotaMedia;
+
+    private void actualizarNotaMedia(Asignatura asig) {
+        asig.notaMedia();
+
+        if (etiquetaNotaMedia == null) {
+            etiquetaNotaMedia = new JLabel("Nota Media: "+ asig.getNotaMedia() , SwingConstants.CENTER);
+            etiquetaNotaMedia.setBounds(270, 360, 140, 20);
+            etiquetaNotaMedia.setForeground(Color.white);
+            etiquetaNotaMedia.setFont(new Font("Arial", Font.BOLD, 15));
+            panel.add(etiquetaNotaMedia);
+        } else {
+            etiquetaNotaMedia.setText("Nota Media: " + asig.getNotaMedia());
+        }
+
+        panel.revalidate();
+        panel.repaint();
+    }
+    
 }

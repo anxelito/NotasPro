@@ -9,6 +9,8 @@ public class Asignatura {
     private String nombre;
     private Curso curso;
     private Estado estado;
+    private double NotaFinal; // Nota final de la asgnatura
+    private double NotaMedia; // Nota media de todas las asignaturas
     private int ECTS;
     private List<Prueba> pruebas;
     public static List<Asignatura> asignaturas = new ArrayList<>();
@@ -42,11 +44,42 @@ public class Asignatura {
             this.estado = Estado.SUSPENSA;
         }
     }
-
-
     
     public void addExamen(Prueba examen){
         pruebas.add(examen);
+    }
+    
+    public void notaFinal () {
+        NotaFinal = 0.0;
+        for (Prueba prueba : pruebas) {
+            NotaFinal+= prueba.getNotaPonderada();
+        }
+    }
+    
+public void notaMedia() {
+    double sumaNotas = 0.0;
+    int numAprobadas = 0;
+
+    for (Asignatura asig : asignaturas) {
+        if (asig.getEstado().equals(Estado.APROVADA)) {
+            sumaNotas += asig.NotaFinal;
+            numAprobadas++;
+        }
+    }
+    if (numAprobadas > 0) {
+        NotaMedia = sumaNotas / numAprobadas;
+    } else {
+        NotaMedia = 0.0; 
+    }
+}
+
+    
+    public double getNotaMedia (){
+        return NotaMedia;
+    }
+    
+    public double getNotaFinal (){
+        return NotaFinal;
     }
     
     public List<Prueba> getPruebas() {

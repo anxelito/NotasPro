@@ -9,22 +9,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class PanelTablaAsignaturas extends JPanel {
-        String[] columnas = {"Nombre", "Curso", "Estado"};
+        String[] columnas = {"Nombre", "Curso", "Estado", "Nota media"};
         DefaultTableModel modeloTabla = new DefaultTableModel(columnas, 0);
 
     public PanelTablaAsignaturas() {
         setLayout(new BorderLayout());
-
-        for (Asignatura asignatura : Asignatura.asignaturas) {
-            String nombre = asignatura.getNombre();
-            String curso = asignatura.getCurso().name(); 
-            asignatura.calcularEstado();
-            String estado = asignatura.getEstado() != null ? asignatura.getEstado().name() : "Sin estado";
-            modeloTabla.addRow(new Object[]{nombre, curso, estado});
-        }
-
         JTable tabla = new JTable(modeloTabla);
 
+        actualizarTabla();
+        
         tabla.setRowHeight(20);
         tabla.setFont(new Font("Arial", Font.PLAIN, 12));
         tabla.getTableHeader().setFont(new Font("Arial", Font.BOLD, 12));
@@ -78,14 +71,19 @@ public class PanelTablaAsignaturas extends JPanel {
     }
 
     public void actualizarTabla() {
-        modeloTabla.setRowCount(0); 
+        modeloTabla.setRowCount(0); // Limpiamos la tabla
 
         for (Asignatura asignatura : Asignatura.asignaturas) {
+            asignatura.notaFinal(); // Calculamos la nota media antes de obtenerla
+            asignatura.calcularEstado(); // Recalculamos el estado
+
             String nombre = asignatura.getNombre();
             String curso = asignatura.getCurso().name(); 
             String estado = asignatura.getEstado() != null ? asignatura.getEstado().name() : "Sin estado";
-        
-            modeloTabla.addRow(new Object[]{nombre, curso, estado});
+            double notaMedia = asignatura.getNotaFinal();
+
+            modeloTabla.addRow(new Object[]{nombre, curso, estado, notaMedia});
         }
+        modeloTabla.fireTableDataChanged(); // Actualizamos la tabla después de llenarla
     }
 }
