@@ -1,12 +1,15 @@
 package GUI;
 
+import Main.Asignatura;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.util.List;
 import javax.swing.*;
 
 public class GUI extends JFrame {
     private JPanel panel;
+    private List<Asignatura> asignaturas;
 
     public GUI() {
         setSize(450, 450);
@@ -60,6 +63,14 @@ public class GUI extends JFrame {
     }
 
     private void cargarUsuario() {
-
+        asignaturas = CargarDatos.cargarAsignaturas();
+        this.setVisible(false);
+        PanelAsig panelAsig = new PanelAsig(this,asignaturas);
+        panelAsig.setVisible(true);
     }
+
+    public List<Asignatura> getAsignaturas() {
+        return asignaturas;
+    }
+    
 }

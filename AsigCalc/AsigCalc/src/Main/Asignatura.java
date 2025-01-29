@@ -1,22 +1,21 @@
 package Main;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
-
-public class Asignatura {
+public class Asignatura implements Serializable {
     private String nombre;
     private Curso curso;
     private Estado estado;
     private double NotaFinal; // Nota final de la asgnatura
     private double NotaMedia; // Nota media de todas las asignaturas
     private int ECTS;
+    private int ECTS_Total;
     private List<Prueba> pruebas;
     public static List<Asignatura> asignaturas = new ArrayList<>();
     
-
-
     public Asignatura(String nombre, Curso curso, int ECTS) {
         this.nombre = nombre;
         this.curso = curso;
@@ -31,7 +30,7 @@ public class Asignatura {
         boolean todasAprobadas = true;
 
         for (Prueba prueba : pruebas) {
-            if (prueba.getEstado() != Estado.APROVADA) {
+            if (prueba.getEstado() != Estado.APROBADA) {
                 todasAprobadas = false; 
                 break;
             }
@@ -39,7 +38,7 @@ public class Asignatura {
         }
 
         if (todasAprobadas && sumaNotas / pruebas.size() >= 5) {
-            this.estado = Estado.APROVADA;
+            this.estado = Estado.APROBADA;
         } else {
             this.estado = Estado.SUSPENSA;
         }
@@ -56,23 +55,35 @@ public class Asignatura {
         }
     }
     
-public void notaMedia() {
-    double sumaNotas = 0.0;
-    int numAprobadas = 0;
+    public void notaMedia() {
+        double sumaNotas = 0.0;
+        int numAprobadas = 0;
 
-    for (Asignatura asig : asignaturas) {
-        if (asig.getEstado().equals(Estado.APROVADA)) {
-            sumaNotas += asig.NotaFinal;
-            numAprobadas++;
+        for (Asignatura asig : asignaturas) {
+            if (asig.getEstado().equals(Estado.APROBADA)) {
+                sumaNotas += asig.NotaFinal;
+                numAprobadas++;
+            }
+        }
+        if (numAprobadas > 0) {
+            NotaMedia = sumaNotas / numAprobadas;
+        } else {
+            NotaMedia = 0.0; 
         }
     }
-    if (numAprobadas > 0) {
-        NotaMedia = sumaNotas / numAprobadas;
-    } else {
-        NotaMedia = 0.0; 
+    
+    public void creditos() {
+        
+        for (Asignatura asig : asignaturas) {
+            if (asig.getEstado().equals(Estado.APROBADA)) {
+                ECTS_Total += asig.ECTS;
+            }
+        }
     }
-}
 
+    public double getCreditos (){
+        return ECTS_Total;
+    }
     
     public double getNotaMedia (){
         return NotaMedia;
@@ -121,6 +132,10 @@ public void notaMedia() {
     @Override
     public String toString() {
         return nombre;  
+    }
+
+    public static List<Asignatura> getAsignaturas() {
+        return asignaturas;
     }
     
 }

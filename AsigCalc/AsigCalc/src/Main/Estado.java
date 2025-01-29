@@ -3,6 +3,6 @@ package Main;
 
 
 public enum Estado {
-    APROVADA,
+    APROBADA,
     SUSPENSA
 }

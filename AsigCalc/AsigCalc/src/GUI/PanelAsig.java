@@ -4,11 +4,13 @@ import Main.*;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.util.List;
 import javax.swing.*;
 
 public class PanelAsig extends JFrame {
     private JPanel panel;
     private PanelTablaAsignaturas panelTabla = new PanelTablaAsignaturas();
+    private Asignatura asignatura;
 
     public PanelAsig(JFrame ventanaAnterior) {
         setSize(450, 450);
@@ -30,6 +32,27 @@ public class PanelAsig extends JFrame {
        
     }
 
+    public PanelAsig(JFrame ventanaAnterior, List<Asignatura> asignaturasCargadas) {
+        asignatura.asignaturas = asignaturasCargadas; 
+        setSize(450, 450);
+        setLocationRelativeTo(null);
+        setResizable(false);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setTitle("Asignaturas");
+        setIconImage(new ImageIcon(getClass().getResource("/resources/black.png")).getImage());
+
+        panel = new BackgroundPanel("/resources/black.png");
+        panel.setLayout(null);
+        this.setContentPane(panel);
+
+        panelTabla.actualizarTabla();
+        
+        colocarEtiquetasAsig();
+        colocarBotonesAsig(ventanaAnterior);
+        mostrarTabla();
+       
+    }
+    
     private void colocarEtiquetasAsig() {
         //Titulo
         JLabel etiqueta = new JLabel("Asignaturas", SwingConstants.CENTER);
@@ -46,7 +69,7 @@ public class PanelAsig extends JFrame {
             ventanaAnterior.setVisible(true);
             this.dispose();
         });
-        crearBoton("Salir y Guardar", 70, 360, 200, 40, Color.blue, e -> System.exit(0));
+        crearBoton("Salir y Guardar", 70, 360, 200, 40, Color.blue, e -> guardarUsuario());
     }
 
     private JButton crearBoton(String texto, int x, int y, int with, int heigh, Color color, ActionListener accion) {
@@ -189,7 +212,7 @@ public class PanelAsig extends JFrame {
             try {
                 String nombre = txtNombre.getText();
                 double nota = Double.parseDouble(txtNota.getText());
-                int notaMin = Integer.parseInt(txtNota.getText());
+                double notaMin = Double.parseDouble(txtNotaMin.getText());
                 int pon = Integer.parseInt(txtPon.getText());
                 Asignatura asig = (Asignatura) cbAsig.getSelectedItem();
 
@@ -203,12 +226,12 @@ public class PanelAsig extends JFrame {
                 asig.notaFinal();
                 asig.notaMedia();
                 asig.calcularEstado();
-                actualizarNotaMedia(asig);
+                actualizarNotaCreditos(asig);
                 panelTabla.actualizarTabla();
                 JOptionPane.showMessageDialog(nuevaVentana, "Prueba añadida con éxito:\n" + "Nombre: " + nombre + "\nNota: " + nota + "\nNota Minima: " + notaMin, "Asignatura Añadida", JOptionPane.INFORMATION_MESSAGE);
                 nuevaVentana.dispose();
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(nuevaVentana, "El valor de % debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(nuevaVentana, "Numeros no válidos.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
         nuevaVentana.add(btnAñadir);
@@ -235,11 +258,13 @@ public class PanelAsig extends JFrame {
         panel.repaint();
     }
     
-   private JLabel etiquetaNotaMedia;
+    private JLabel etiquetaNotaMedia;
+    private JLabel etiquetaCreditos;
 
-    private void actualizarNotaMedia(Asignatura asig) {
+    private void actualizarNotaCreditos(Asignatura asig) {
         asig.notaMedia();
-
+        asig.creditos();
+        
         if (etiquetaNotaMedia == null) {
             etiquetaNotaMedia = new JLabel("Nota Media: "+ asig.getNotaMedia() , SwingConstants.CENTER);
             etiquetaNotaMedia.setBounds(270, 360, 140, 20);
@@ -249,9 +274,24 @@ public class PanelAsig extends JFrame {
         } else {
             etiquetaNotaMedia.setText("Nota Media: " + asig.getNotaMedia());
         }
+        
+        if (etiquetaCreditos == null) {
+            etiquetaCreditos = new JLabel("Creditos: "+ asig.getCreditos() , SwingConstants.CENTER);
+            etiquetaCreditos.setBounds(270, 380, 140, 20);
+            etiquetaCreditos.setForeground(Color.white);
+            etiquetaCreditos.setFont(new Font("Arial", Font.BOLD, 15));
+            panel.add(etiquetaCreditos);
+        } else {
+            etiquetaCreditos.setText("Creditos: " + asig.getCreditos());
+        }
 
         panel.revalidate();
         panel.repaint();
+    }
+    
+    private void guardarUsuario() {
+        asignatura.asignaturas = asignatura.getAsignaturas();
+        GuardarDatos.guardarAsignaturas(asignatura.asignaturas);
     }
     
 }

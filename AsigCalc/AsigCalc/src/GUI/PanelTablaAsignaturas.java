@@ -1,6 +1,7 @@
 package GUI;
 
 import Main.Asignatura;
+import static Main.Asignatura.asignaturas;
 import Main.Prueba;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -9,7 +10,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class PanelTablaAsignaturas extends JPanel {
-        String[] columnas = {"Nombre", "Curso", "Estado", "Nota media"};
+        String[] columnas = {"Nombre", "Curso", "Estado", "Creditos", "Nota media"};
         DefaultTableModel modeloTabla = new DefaultTableModel(columnas, 0);
 
     public PanelTablaAsignaturas() {
@@ -73,17 +74,22 @@ public class PanelTablaAsignaturas extends JPanel {
     public void actualizarTabla() {
         modeloTabla.setRowCount(0); // Limpiamos la tabla
 
-        for (Asignatura asignatura : Asignatura.asignaturas) {
-            asignatura.notaFinal(); // Calculamos la nota media antes de obtenerla
-            asignatura.calcularEstado(); // Recalculamos el estado
+        if (asignaturas != null && !asignaturas.isEmpty()) {
+            for (Asignatura asignatura : asignaturas) {
+                asignatura.notaFinal(); // Calculamos la nota media antes de obtenerla
+                asignatura.calcularEstado(); // Recalculamos el estado
 
-            String nombre = asignatura.getNombre();
-            String curso = asignatura.getCurso().name(); 
-            String estado = asignatura.getEstado() != null ? asignatura.getEstado().name() : "Sin estado";
-            double notaMedia = asignatura.getNotaFinal();
+                String nombre = asignatura.getNombre();
+                String curso = asignatura.getCurso().name(); 
+                String estado = asignatura.getEstado() != null ? asignatura.getEstado().name() : "Sin estado";
+                int creditos = asignatura.getECTS();
+                double notaMedia = asignatura.getNotaFinal();
 
-            modeloTabla.addRow(new Object[]{nombre, curso, estado, notaMedia});
+                modeloTabla.addRow(new Object[]{nombre, curso, estado, creditos, notaMedia});
+            }
+            modeloTabla.fireTableDataChanged(); // Actualizamos la tabla después de llenarla
+        } else {
+            System.out.println("No hay asignaturas para mostrar.");
         }
-        modeloTabla.fireTableDataChanged(); // Actualizamos la tabla después de llenarla
     }
 }
