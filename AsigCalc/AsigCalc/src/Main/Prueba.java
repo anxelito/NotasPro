@@ -49,7 +49,7 @@ public class Prueba implements Serializable{
         return notaMin;
     }
 
-    public void setNotaMin(int notaMin) {
+    public void setNotaMin(double notaMin) {
         this.notaMin = notaMin;
     }
 
@@ -75,6 +75,11 @@ public class Prueba implements Serializable{
 
     public static void setExamenes(List<Prueba> examenes) {
         Prueba.examenes = examenes;
+    }
+
+    @Override
+    public String toString() {
+        return nombre;
     }
 
 }

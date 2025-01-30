@@ -13,7 +13,7 @@ public class Asignatura implements Serializable {
     private double NotaMedia; // Nota media de todas las asignaturas
     private int ECTS;
     private int ECTS_Total;
-    private List<Prueba> pruebas;
+    public List<Prueba> pruebas;
     public static List<Asignatura> asignaturas = new ArrayList<>();
     
     public Asignatura(String nombre, Curso curso, int ECTS) {
@@ -49,7 +49,7 @@ public class Asignatura implements Serializable {
     }
     
     public void notaFinal () {
-        NotaFinal = 0.0;
+        NotaFinal = 0.00;
         for (Prueba prueba : pruebas) {
             NotaFinal+= prueba.getNotaPonderada();
         }
@@ -66,9 +66,9 @@ public class Asignatura implements Serializable {
             }
         }
         if (numAprobadas > 0) {
-            NotaMedia = sumaNotas / numAprobadas;
+            NotaMedia = Double.parseDouble(String.format("%.2f", sumaNotas / numAprobadas));
         } else {
-            NotaMedia = 0.0; 
+            NotaMedia = 0.00; 
         }
     }
     
