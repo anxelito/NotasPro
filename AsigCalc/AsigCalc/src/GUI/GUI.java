@@ -1,9 +1,6 @@
 package GUI;
 
-import static GUI.PanelAsig.panelExamenes;
-import static GUI.PanelAsig.panelTabla;
 import Main.Asignatura;
-import Main.Prueba;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -24,8 +21,8 @@ public class GUI extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("Uni");
-        setIconImage(new ImageIcon(getClass().getResource("/resources/book.png")).getImage());
+        setTitle("NotasPro");
+        setIconImage(new ImageIcon(getClass().getResource("/resources/logo.png")).getImage());
 
         colocarPanelMain();
     }
@@ -40,10 +37,10 @@ public class GUI extends JFrame {
     }
 
     private void colocarEtiquetasMain() {
-        JLabel etiqueta = new JLabel("Bienvenido", SwingConstants.CENTER);
-        etiqueta.setBounds(25, 30, 400, 65);
+        JLabel etiqueta = new JLabel("NotasPro", SwingConstants.CENTER);
+        etiqueta.setBounds(20, 40, 400, 65);
         etiqueta.setForeground(Color.white);
-        etiqueta.setFont(new Font("arial", Font.BOLD, 40));
+        etiqueta.setFont(new Font("Times New Roman", Font.BOLD, 60));
         panel.add(etiqueta);
     }
 

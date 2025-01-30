@@ -65,8 +65,9 @@ public class Prueba implements Serializable{
         return estado;
     }
 
-    public void setEstado(Estado estado) {
-        this.estado = estado;
+    public void setEstado() {
+        if (nota>=notaMin) this.estado = Estado.APROBADA;
+        else this.estado = Estado.SUSPENSA;
     }
 
     public static List<Prueba> getExamenes() {

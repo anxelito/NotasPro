@@ -28,27 +28,24 @@ public class Asignatura implements Serializable {
         asignaturas.add(this);
     }
     
-    
-    
     public void calcularEstado() {
         double sumaNotas = 0;
-        boolean todasAprobadas = true;
+        int cantidadAprobadas = 0;
 
         for (Prueba prueba : pruebas) {
-            if (prueba.getEstado() != Estado.APROBADA) {
-                todasAprobadas = false; 
-                break;
+            if (prueba.getEstado() == Estado.APROBADA) {
+                sumaNotas += prueba.getNotaPonderada();
+                cantidadAprobadas++;
             }
-            sumaNotas += prueba.getNotaPonderada();  
         }
 
-        if (todasAprobadas && sumaNotas / pruebas.size() >= 5) {
+        if (cantidadAprobadas == pruebas.size() && getNotaFinal() >= 5) {
             this.estado = Estado.APROBADA;
         } else {
             this.estado = Estado.SUSPENSA;
         }
     }
-    
+
     public void addExamen(Prueba examen){
         pruebas.add(examen);
     }
@@ -71,7 +68,7 @@ public class Asignatura implements Serializable {
             }
         }
         if (numAprobadas > 0) {
-            NotaMedia = Double.parseDouble(String.format("%.2f", sumaNotas / numAprobadas));
+            NotaMedia = sumaNotas / numAprobadas;
         } else {
             NotaMedia = 0.00; 
         }

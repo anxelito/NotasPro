@@ -26,7 +26,7 @@ public class PanelAsig extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Asignaturas");
-        setIconImage(new ImageIcon(getClass().getResource("/resources/book.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/resources/logo.png")).getImage());
 
         panel = new BackgroundPanel("/resources/fondo.png");
         panel.setLayout(null);
@@ -47,7 +47,7 @@ public class PanelAsig extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Asignaturas");
-        setIconImage(new ImageIcon(getClass().getResource("/resources/book.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/resources/logo.png")).getImage());
 
         panel = new BackgroundPanel("/resources/fondo.png");
         panel.setLayout(null);
@@ -72,19 +72,19 @@ public class PanelAsig extends JFrame {
 
         etiqueta.setBounds(100, 30, 400, 65);
         etiqueta.setForeground(Color.white);
-        etiqueta.setFont(new Font("arial", Font.BOLD, 40));
+        etiqueta.setFont(new Font("Times New Roman", Font.BOLD, 40));
         panel.add(etiqueta);
         //Asignatura
         JLabel etiqueta1 = new JLabel("Asignaturas:", SwingConstants.CENTER);
         etiqueta1.setBounds(53, 180, 100, 20);
         etiqueta1.setForeground(Color.white);
-        etiqueta1.setFont(new Font("arial", Font.BOLD, 15));
+        etiqueta1.setFont(new Font("Times New Roman", Font.BOLD, 15));
         panel.add(etiqueta1);
         //Pruebas
         JLabel etiqueta2 = new JLabel("Pruebas:", SwingConstants.CENTER);
         etiqueta2.setBounds(40, 400, 100, 20);
         etiqueta2.setForeground(Color.white);
-        etiqueta2.setFont(new Font("arial", Font.BOLD, 15));
+        etiqueta2.setFont(new Font("Times New Roman", Font.BOLD, 15));
         panel.add(etiqueta2);
     }
 
@@ -93,6 +93,7 @@ public class PanelAsig extends JFrame {
         crearBoton("Editar/Eliminar",223, 130, 180, 37, Color.pink, e -> {
             JFrame nuevaVentana = new JFrame("Nueva Asignatura");
             nuevaVentana.setSize(400, 100);
+            nuevaVentana.setIconImage(new ImageIcon(getClass().getResource("/resources/logo.png")).getImage());
             nuevaVentana.setLocationRelativeTo(null); 
             nuevaVentana.setResizable(false);
             nuevaVentana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -101,24 +102,24 @@ public class PanelAsig extends JFrame {
         // Asignatura
             JButton btnAñadir = new JButton("Editar Asignatura");
             btnAñadir.setBounds(40, 20, 150, 30);
-            btnAñadir.addActionListener(r -> editarAsig());
+            btnAñadir.addActionListener(r -> {nuevaVentana.dispose();editarAsig();});
             nuevaVentana.add(btnAñadir);
        
         // Prueba
             JButton btnPrueba = new JButton("Editar Prueba");
             btnPrueba.setBounds(200, 20, 150, 30);
-            btnPrueba.addActionListener(a -> editarPrueba());
+            btnPrueba.addActionListener(a -> {nuevaVentana.dispose();editarPrueba();});
             nuevaVentana.add(btnPrueba);
 
             nuevaVentana.setVisible(true);
         }, "/resources/Editar.png");
         
         crearBoton("Añadir Prueba", 423, 130, 180, 37, Color.cyan, e -> añadirPrueba(), "/resources/AñadirPrueba.png");
-        crearBoton("<-", 20, 550, 40, 40, Color.red, e -> {
+        crearBoton("<-", 20, 550, 30, 30, Color.red, e -> {
             ventanaAnterior.setVisible(true);
             this.dispose();
         }, "/resources/atras.png");
-        crearBoton("Salir y Guardar", 80, 545, 50, 50, Color.blue, e -> guardarUsuario(), "/resources/salir.png");
+        crearBoton("Salir y Guardar", 80, 550, 30, 30, Color.blue, e -> guardarUsuario(), "/resources/salir.png");
     }
 
     private JButton crearBoton(String texto, int x, int y, int width, int height, Color color, ActionListener accion, String ruta) {
@@ -156,12 +157,15 @@ public class PanelAsig extends JFrame {
     
     public void nombreUsuario() {
         if (this.usuario == null) {
-            String nombre = JOptionPane.showInputDialog(this, "Introduce tu nombre de usuario:");
+            String nombre = JOptionPane.showInputDialog(this, 
+                "Introduce tu nombre de usuario:", 
+                "Nuevo Usuario", 
+                JOptionPane.PLAIN_MESSAGE); 
 
             if (nombre != null && !nombre.isEmpty()) {
                 this.usuario = nombre;
             } else {
-                this.usuario = null;  
+                this.usuario = null;
             }
         }
     }
@@ -169,6 +173,7 @@ public class PanelAsig extends JFrame {
     private void añadirAsig() {       
         JFrame nuevaVentana = new JFrame("Nueva Asignatura");
         nuevaVentana.setSize(400, 250);
+        nuevaVentana.setIconImage(new ImageIcon(getClass().getResource("/resources/logo.png")).getImage());
         nuevaVentana.setLocationRelativeTo(null); 
         nuevaVentana.setResizable(false);
         nuevaVentana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -217,6 +222,8 @@ public class PanelAsig extends JFrame {
 
                 // Crear asignatura
                 Asignatura nuevaAsignatura = new Asignatura(nombre, curso, ects, usuario);
+                nuevaAsignatura.calcularEstado();
+                System.out.println(nuevaAsignatura.getEstado());
                 panelTabla.actualizarTabla();
                 JOptionPane.showMessageDialog(nuevaVentana, "Asignatura añadida con éxito:\n" + "Nombre: " + nombre + "\nCurso: " + curso + "\nECTS: " + ects, "Asignatura Añadida", JOptionPane.INFORMATION_MESSAGE);
                 nuevaVentana.dispose();
@@ -238,6 +245,7 @@ public class PanelAsig extends JFrame {
     private void editarAsig() {
         JFrame nuevaVentana = new JFrame("Editar/Eliminar Asignatura");
         nuevaVentana.setSize(400, 260);
+        nuevaVentana.setIconImage(new ImageIcon(getClass().getResource("/resources/logo.png")).getImage());
         nuevaVentana.setLocationRelativeTo(null); 
         nuevaVentana.setResizable(false);
         nuevaVentana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -348,9 +356,9 @@ public class PanelAsig extends JFrame {
     }
     
     private void editarPrueba() { 
-        
         JFrame nuevaVentana = new JFrame("Editar/Eliminar Prueba");
         nuevaVentana.setSize(400, 340);
+        nuevaVentana.setIconImage(new ImageIcon(getClass().getResource("/resources/logo.png")).getImage());
         nuevaVentana.setLocationRelativeTo(null); 
         nuevaVentana.setResizable(false);
         nuevaVentana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -416,27 +424,53 @@ public class PanelAsig extends JFrame {
         btnAñadir.setBounds(35, 260, 100, 30);
         btnAñadir.addActionListener(e -> {
             try {
-                String nombre = txtNombre.getText();
-                double nota = Double.parseDouble(txtNota.getText());
-                double notaMin = Double.parseDouble(txtNotaMin.getText());
-                int pon = Integer.parseInt(txtPon.getText());
-                Prueba prueba = (Prueba) cbPrueba.getSelectedItem();
+                String nombre = txtNombre.getText().trim();
+                String strNota = txtNota.getText().trim();
+                String strNotaMin = txtNotaMin.getText().trim();
+                String strPonderacion = txtPon.getText().trim();
 
-                if (nombre.isEmpty()) {
-                    JOptionPane.showMessageDialog(nuevaVentana, "El nombre no puede estar vacío.", "Error", JOptionPane.ERROR_MESSAGE);
+                if (nombre.isEmpty() || strNota.isEmpty() || strNotaMin.isEmpty() || strPonderacion.isEmpty()) {
+                    JOptionPane.showMessageDialog(nuevaVentana, "Todos los campos deben estar llenos.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
+                double nota, notaMin;
+                int pon;
+
+                try {
+                    nota = Double.parseDouble(strNota);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(nuevaVentana, "La nota debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                try {
+                    notaMin = Double.parseDouble(strNotaMin);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(nuevaVentana, "La nota mínima debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                try {
+                    pon = Integer.parseInt(strPonderacion);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(nuevaVentana, "La ponderación debe ser un número entero válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
                 // Crear prueba
+                Prueba prueba = (Prueba) cbPrueba.getSelectedItem();
                 prueba.setNombre(nombre);
                 prueba.setPonderacion(pon);
                 prueba.setNotaMin(notaMin);
                 prueba.setNota(nota);
+                prueba.setEstado();
                 asig.notaFinal();
                 asig.notaMedia();
                 asig.calcularEstado();
-                actualizarNotaCreditos(asig);
                 panelTabla.actualizarTabla();
+                panelExamenes.actualizarTabla(asig);
+                actualizarNotaCreditos(asig);
                 JOptionPane.showMessageDialog(nuevaVentana, "Prueba actualizada con éxito:\n" + "Nombre: " + nombre + "\nNota: " + nota + "\nNota Minima: " + notaMin, "Asignatura Añadida", JOptionPane.INFORMATION_MESSAGE);
                 nuevaVentana.dispose();
             } catch (NumberFormatException ex) {
@@ -489,6 +523,7 @@ public class PanelAsig extends JFrame {
     private void añadirPrueba() {       
         JFrame nuevaVentana = new JFrame("Nueva Prueba");
         nuevaVentana.setSize(400, 300);
+        nuevaVentana.setIconImage(new ImageIcon(getClass().getResource("/resources/logo.png")).getImage());
         nuevaVentana.setLocationRelativeTo(null); 
         nuevaVentana.setResizable(false);
         nuevaVentana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -544,29 +579,55 @@ public class PanelAsig extends JFrame {
         btnAñadir.setBounds(80, 220, 100, 30);
         btnAñadir.addActionListener(e -> {
             try {
-                String nombre = txtNombre.getText();
-                double nota = Double.parseDouble(txtNota.getText());
-                double notaMin = Double.parseDouble(txtNotaMin.getText());
-                int pon = Integer.parseInt(txtPon.getText());
-                Asignatura asig = (Asignatura) cbAsig.getSelectedItem();
+                String nombre = txtNombre.getText().trim();
+                String strNota = txtNota.getText().trim();
+                String strNotaMin = txtNotaMin.getText().trim();
+                String strPonderacion = txtPon.getText().trim();
 
-                if (nombre.isEmpty()) {
-                    JOptionPane.showMessageDialog(nuevaVentana, "El nombre no puede estar vacío.", "Error", JOptionPane.ERROR_MESSAGE);
+                if (nombre.isEmpty() || strNota.isEmpty() || strNotaMin.isEmpty() || strPonderacion.isEmpty()) {
+                    JOptionPane.showMessageDialog(nuevaVentana, "Todos los campos deben estar llenos.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-                // Crear prueba
-                asig.addExamen(new Prueba(nombre, pon, notaMin, nota));
+                double nota, notaMin;
+                int ponderacion;
+
+                try {
+                    nota = Double.parseDouble(strNota);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(nuevaVentana, "La nota debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                try {
+                    notaMin = Double.parseDouble(strNotaMin);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(nuevaVentana, "La nota mínima debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                try {
+                    ponderacion = Integer.parseInt(strPonderacion);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(nuevaVentana, "La ponderación debe ser un número entero válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                Asignatura asig = (Asignatura) cbAsig.getSelectedItem();
+
+                asig.addExamen(new Prueba(nombre, ponderacion, notaMin, nota));
                 asig.notaFinal();
                 asig.notaMedia();
                 asig.calcularEstado();
                 actualizarNotaCreditos(asig);
                 panelTabla.actualizarTabla();
                 panelExamenes.actualizarTabla(asig);
-                JOptionPane.showMessageDialog(nuevaVentana, "Prueba añadida con éxito:\n" + "Nombre: " + nombre + "\nNota: " + nota + "\nNota Minima: " + notaMin, "Asignatura Añadida", JOptionPane.INFORMATION_MESSAGE);
+
+                JOptionPane.showMessageDialog(nuevaVentana, "Prueba añadida con éxito:\n" + "Nombre: " + nombre + "\nNota: " + nota + "\nNota Mínima: " + notaMin, "Prueba Añadida", JOptionPane.INFORMATION_MESSAGE);
                 nuevaVentana.dispose();
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(nuevaVentana, "Numeros no válidos.", "Error", JOptionPane.ERROR_MESSAGE);
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(nuevaVentana, "Ocurrió un error inesperado.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
         nuevaVentana.add(btnAñadir);
@@ -612,23 +673,24 @@ public class PanelAsig extends JFrame {
         asig.creditos();
         
         if (etiquetaNotaMedia == null) {
-            etiquetaNotaMedia = new JLabel("Nota Media: "+ asig.getNotaMedia() , SwingConstants.CENTER);
-            etiquetaNotaMedia.setBounds(270, 550, 140, 20);
+            etiquetaNotaMedia = new JLabel("<html><u>Nota Media: "+ asig.getNotaMedia() + "</u></html>" , SwingConstants.CENTER);
+            etiquetaNotaMedia.setBounds(150, 545, 200, 40);
             etiquetaNotaMedia.setForeground(Color.white);
-            etiquetaNotaMedia.setFont(new Font("Arial", Font.BOLD, 15));
+            etiquetaNotaMedia.setFont(new Font("Times New Roman", Font.BOLD, 20));
             panel.add(etiquetaNotaMedia);
         } else {
-            etiquetaNotaMedia.setText("Nota Media: " + asig.getNotaMedia());
+            etiquetaNotaMedia.setText("<html><u>Nota Media: " + asig.getNotaMedia()+ "</u></html>");
         }
         
         if (etiquetaCreditos == null) {
-            etiquetaCreditos = new JLabel("Creditos: "+ asig.getCreditos() , SwingConstants.CENTER);
-            etiquetaCreditos.setBounds(270, 570, 140, 20);
+            etiquetaCreditos = new JLabel("<html><u>Créditos: " + asig.getCreditos() + "</u></html>", SwingConstants.CENTER);
+            etiquetaCreditos.setBounds(340, 545, 200, 40);
             etiquetaCreditos.setForeground(Color.white);
-            etiquetaCreditos.setFont(new Font("Arial", Font.BOLD, 15));
+            etiquetaCreditos.setFont(new Font("Times New Roman", Font.BOLD, 20));
             panel.add(etiquetaCreditos);
+
         } else {
-            etiquetaCreditos.setText("Creditos: " + asig.getCreditos());
+            etiquetaCreditos.setText("<html><u>Créditos: " + asig.getCreditos() + "</u></html>");
         }
 
         panel.revalidate();
