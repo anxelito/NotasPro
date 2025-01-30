@@ -55,8 +55,10 @@ public class PanelTablaAsignaturas extends JPanel {
                 String estado = asignatura.getEstado() != null ? asignatura.getEstado().name() : "Sin estado";
                 int creditos = asignatura.getECTS();
                 double notaMedia = asignatura.getNotaFinal();
+                String notaMediaFormateada = String.format("%.2f", notaMedia);
 
-                modeloTabla.addRow(new Object[]{nombre, curso, estado, creditos, notaMedia});
+
+                modeloTabla.addRow(new Object[]{nombre, curso, estado, creditos, notaMediaFormateada});
             }
             modeloTabla.fireTableDataChanged();
         } else {

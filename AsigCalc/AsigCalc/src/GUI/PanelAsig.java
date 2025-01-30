@@ -14,11 +14,13 @@ import javax.swing.*;
 
 public class PanelAsig extends JFrame {
     private JPanel panel;
+    private static String usuario;
     public static PanelTablaAsignaturas panelTabla = new PanelTablaAsignaturas();
     public static PanelTablaPruebas panelExamenes = new PanelTablaPruebas();
     private Asignatura asignatura;
 
     public PanelAsig(JFrame ventanaAnterior) {
+        nombreUsuario();
         setSize(650, 650);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -29,13 +31,13 @@ public class PanelAsig extends JFrame {
         panel = new BackgroundPanel("/resources/black.png");
         panel.setLayout(null);
         this.setContentPane(panel);
-
+        
         panelTabla.actualizarTabla();
         
         colocarEtiquetasAsig();
         colocarBotonesAsig(ventanaAnterior);
         mostrarTabla();
-       
+        
     }
 
     public PanelAsig(JFrame ventanaAnterior, List<Asignatura> asignaturasCargadas) {
@@ -61,16 +63,34 @@ public class PanelAsig extends JFrame {
     
     private void colocarEtiquetasAsig() {
         //Titulo
-        JLabel etiqueta = new JLabel("Asignaturas", SwingConstants.CENTER);
-        etiqueta.setBounds(90, 30, 400, 65);
+        JLabel etiqueta;
+        if (usuario != null) {
+            etiqueta = new JLabel("Bienvenido " + getUsuario(), SwingConstants.CENTER);
+        } else {
+            etiqueta = new JLabel("Bienvenido " + asignatura.asignaturas.get(0).getUsuario(), SwingConstants.CENTER);
+        }
+
+        etiqueta.setBounds(100, 30, 400, 65);
         etiqueta.setForeground(Color.white);
         etiqueta.setFont(new Font("arial", Font.BOLD, 40));
         panel.add(etiqueta);
+        //Asignatura
+        JLabel etiqueta1 = new JLabel("Asignaturas:", SwingConstants.CENTER);
+        etiqueta1.setBounds(53, 180, 100, 20);
+        etiqueta1.setForeground(Color.white);
+        etiqueta1.setFont(new Font("arial", Font.BOLD, 15));
+        panel.add(etiqueta1);
+        //Pruebas
+        JLabel etiqueta2 = new JLabel("Pruebas:", SwingConstants.CENTER);
+        etiqueta2.setBounds(40, 400, 100, 20);
+        etiqueta2.setForeground(Color.white);
+        etiqueta2.setFont(new Font("arial", Font.BOLD, 15));
+        panel.add(etiqueta2);
     }
 
     private void colocarBotonesAsig(JFrame ventanaAnterior) {
-        crearBoton("Añadir Asig.", 15, 130, 180, 37, Color.white, e -> añadirAsig(), "/resources/AñadirAsig.png");
-        crearBoton("Editar/Eliminar",220, 130, 180, 37, Color.pink, e -> {
+        crearBoton("Añadir Asig.", 18, 130, 180, 37, Color.white, e -> añadirAsig(), "/resources/AñadirAsig.png");
+        crearBoton("Editar/Eliminar",223, 130, 180, 37, Color.pink, e -> {
             JFrame nuevaVentana = new JFrame("Nueva Asignatura");
             nuevaVentana.setSize(400, 100);
             nuevaVentana.setLocationRelativeTo(null); 
@@ -93,7 +113,7 @@ public class PanelAsig extends JFrame {
             nuevaVentana.setVisible(true);
         }, "/resources/Editar.png");
         
-        crearBoton("Añadir Prueba", 420, 130, 180, 37, Color.cyan, e -> añadirPrueba(), "/resources/AñadirPrueba.png");
+        crearBoton("Añadir Prueba", 423, 130, 180, 37, Color.cyan, e -> añadirPrueba(), "/resources/AñadirPrueba.png");
         crearBoton("<-", 20, 550, 40, 40, Color.red, e -> {
             ventanaAnterior.setVisible(true);
             this.dispose();
@@ -132,8 +152,20 @@ public class PanelAsig extends JFrame {
             e.printStackTrace();
             return null;
         }
-    }    
+    }  
     
+    public void nombreUsuario() {
+        if (this.usuario == null) {
+            String nombre = JOptionPane.showInputDialog(this, "Introduce tu nombre de usuario:");
+
+            if (nombre != null && !nombre.isEmpty()) {
+                this.usuario = nombre;
+            } else {
+                this.usuario = null;  
+            }
+        }
+    }
+
     private void añadirAsig() {       
         JFrame nuevaVentana = new JFrame("Nueva Asignatura");
         nuevaVentana.setSize(400, 250);
@@ -184,7 +216,7 @@ public class PanelAsig extends JFrame {
                 }
 
                 // Crear asignatura
-                Asignatura nuevaAsignatura = new Asignatura(nombre, curso, ects);
+                Asignatura nuevaAsignatura = new Asignatura(nombre, curso, ects, usuario);
                 panelTabla.actualizarTabla();
                 JOptionPane.showMessageDialog(nuevaVentana, "Asignatura añadida con éxito:\n" + "Nombre: " + nombre + "\nCurso: " + curso + "\nECTS: " + ects, "Asignatura Añadida", JOptionPane.INFORMATION_MESSAGE);
                 nuevaVentana.dispose();
@@ -608,4 +640,11 @@ public class PanelAsig extends JFrame {
         GuardarDatos.guardarAsignaturas(asignatura.asignaturas);
     }
     
+    public void setUsuario (String usu) {
+        this.usuario = usu;
+    }
+    
+    public String getUsuario (){
+        return usuario;
+    }
 }

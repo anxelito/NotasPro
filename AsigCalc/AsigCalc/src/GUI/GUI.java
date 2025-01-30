@@ -1,6 +1,9 @@
 package GUI;
 
+import static GUI.PanelAsig.panelExamenes;
+import static GUI.PanelAsig.panelTabla;
 import Main.Asignatura;
+import Main.Prueba;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionListener;
@@ -57,10 +60,23 @@ public class GUI extends JFrame {
     }
 
     private void abrirPanelAsig() {
-        this.setVisible(false);
+        // Crear el panel
         PanelAsig panelAsig = new PanelAsig(this);
-        panelAsig.setVisible(true);
+
+        // Solo llamamos a nombreUsuario() antes de mostrar el panel
+        panelAsig.nombreUsuario();
+
+        // Verificar que el nombre de usuario no sea null
+        if (panelAsig.getUsuario() != null && !panelAsig.getUsuario().isEmpty()) {
+            // Si el nombre de usuario es válido, mostrar el panel
+            this.setVisible(false);  // Ocultar el panel actual
+            panelAsig.setVisible(true);  // Mostrar el panel de asignaturas
+        } else {
+            // Si no se ingresó un nombre válido, mostrar un mensaje de error
+            JOptionPane.showMessageDialog(this, "Debe ingresar un nombre de usuario válido.");
+        }
     }
+
 
     private void cargarUsuario() {
         asignaturas = CargarDatos.cargarAsignaturas();

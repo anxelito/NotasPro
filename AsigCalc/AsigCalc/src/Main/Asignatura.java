@@ -1,11 +1,13 @@
 package Main;
 
+import GUI.PanelAsig;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class Asignatura implements Serializable {
+    private String Usuario;
     private String nombre;
     private Curso curso;
     private Estado estado;
@@ -16,7 +18,8 @@ public class Asignatura implements Serializable {
     public List<Prueba> pruebas;
     public static List<Asignatura> asignaturas = new ArrayList<>();
     
-    public Asignatura(String nombre, Curso curso, int ECTS) {
+    public Asignatura(String nombre, Curso curso, int ECTS, String usuario) {
+        this.Usuario = usuario;
         this.nombre = nombre;
         this.curso = curso;
         this.estado = null;
@@ -24,6 +27,8 @@ public class Asignatura implements Serializable {
         this.pruebas = new ArrayList<>();
         asignaturas.add(this);
     }
+    
+    
     
     public void calcularEstado() {
         double sumaNotas = 0;
@@ -138,4 +143,7 @@ public class Asignatura implements Serializable {
         return asignaturas;
     }
     
+    public String getUsuario () {
+        return Usuario;
+    }
 }
