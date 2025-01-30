@@ -22,7 +22,7 @@ public class GUI extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("NotasPro");
-        setIconImage(new ImageIcon(getClass().getResource("/resources/logo.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/resources/book.png")).getImage());
 
         colocarPanelMain();
     }

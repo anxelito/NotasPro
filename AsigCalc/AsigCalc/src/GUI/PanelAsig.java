@@ -8,6 +8,7 @@ import java.awt.Image;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -138,22 +139,35 @@ public class PanelAsig extends JFrame {
     }
 
     private ImageIcon escalarImagen(String ruta, int ancho, int alto) {
-        try {
-            BufferedImage imagenOriginal = ImageIO.read(getClass().getResource(ruta));
-
-            Image imagenTemporal = imagenOriginal.getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
-
-            BufferedImage imagenEscalada = new BufferedImage(ancho, alto, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g2d = imagenEscalada.createGraphics();
-            g2d.drawImage(imagenTemporal, 0, 0, null);
-            g2d.dispose();
-
-            return new ImageIcon(imagenEscalada);
-        } catch (IOException e) {
-            e.printStackTrace();
+    try {
+        // Verificar si el recurso se encuentra
+        URL url = getClass().getResource(ruta);
+        if (url == null) {
+            System.err.println("No se encontró el recurso: " + ruta);
             return null;
         }
-    }  
+
+        // Leer la imagen desde el recurso
+        BufferedImage imagenOriginal = ImageIO.read(url);
+
+        // Escalar la imagen
+        Image imagenTemporal = imagenOriginal.getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+
+        // Crear la imagen escalada
+        BufferedImage imagenEscalada = new BufferedImage(ancho, alto, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = imagenEscalada.createGraphics();
+        g2d.drawImage(imagenTemporal, 0, 0, null);
+        g2d.dispose();
+
+        return new ImageIcon(imagenEscalada);
+    } catch (IOException e) {
+        // Imprimir error si la carga de la imagen falla
+        System.err.println("Error al cargar la imagen: " + e.getMessage());
+        e.printStackTrace();
+        return null;
+    }
+}
+
     
     public void nombreUsuario() {
         if (this.usuario == null) {

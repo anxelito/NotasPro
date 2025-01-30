@@ -6,6 +6,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class PanelTablaPruebas extends JPanel {
     private DefaultTableModel modeloExamenes;
@@ -90,20 +92,20 @@ public class PanelTablaPruebas extends JPanel {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             JLabel label = new JLabel(value.toString(), SwingConstants.CENTER);
-            label.setOpaque(true); // Necesario para que el cambio de color de fondo funcione
+            label.setOpaque(true);
 
-            // Cambiar el fondo de la celda dependiendo del estado
             if (value != null) {
                 if (value.toString().equals("APROBADA")) {
-                    label.setBackground(new Color(144, 238, 144)); // Fondo verde suave (Light Green)
+                    label.setBackground(new Color(144, 238, 144)); // Fondo verde más suave (Light Green)
                 } else if (value.toString().equals("SUSPENSA")) {
-                    label.setBackground(new Color(255, 204, 203)); // Fondo rojo suave (Light Red)
+                    label.setBackground(new Color(255, 204, 203)); // Fondo rojo más suave (Light Red)
                 } else {
                     label.setBackground(Color.WHITE); // Fondo blanco si no tiene estado
                 }
             }
 
-            // Establecer el color del texto
+            label.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.BLACK)); // Solo borde abajo y derecha
+
             label.setForeground(Color.BLACK);
 
             return label;
