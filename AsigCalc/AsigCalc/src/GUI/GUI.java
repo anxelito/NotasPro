@@ -6,8 +6,13 @@ import Main.Asignatura;
 import Main.Prueba;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.List;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class GUI extends JFrame {
@@ -20,13 +25,13 @@ public class GUI extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Uni");
-        setIconImage(new ImageIcon(getClass().getResource("/resources/black.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/resources/book.png")).getImage());
 
         colocarPanelMain();
     }
 
     private void colocarPanelMain() {
-        panel = new BackgroundPanel("/resources/black.png");
+        panel = new BackgroundPanel("/resources/fondo.png");
         panel.setLayout(null);
         this.setContentPane(panel);
 
@@ -43,21 +48,43 @@ public class GUI extends JFrame {
     }
 
     private void colocarBotonesMain() {
-        crearBoton("Nuevo Usuario", 125, 150, Color.cyan, e -> abrirPanelAsig());
-        crearBoton("Cargar Usuario", 125, 200, Color.green, e -> cargarUsuario());
-        crearBoton("Salir", 125, 250, Color.red, e -> System.exit(0));
+        crearBoton("Nuevo Usuario", 125, 150, 200, 40, Color.cyan, e -> abrirPanelAsig(), "/resources/Nuevo.png");
+        crearBoton("Cargar Usuario", 125, 200, 200, 40, Color.green, e -> cargarUsuario(), "/resources/Cargar.png");
+        crearBoton("Salir", 125, 250, 200, 40, Color.red, e -> System.exit(0), "/resources/6.png");
     }
 
-    private JButton crearBoton(String texto, int x, int y, Color color, ActionListener accion) {
-        JButton boton = new JButton(texto);
-        boton.setBounds(x, y, 200, 40);
+    private JButton crearBoton(String texto, int x, int y, int width, int height, Color color, ActionListener accion, String ruta) {
+        JButton boton = new JButton();
+        boton.setBounds(x, y, width, height);
         boton.setBackground(color);
-        boton.setOpaque(true);
+        boton.setOpaque(false);
         boton.setBorderPainted(false);
         boton.addActionListener(accion);
+
+        if (ruta != null) { 
+            boton.setIcon(escalarImagen(ruta,width,height));
+        }
         panel.add(boton);
         return boton;
     }
+
+    private ImageIcon escalarImagen(String ruta, int ancho, int alto) {
+        try {
+            BufferedImage imagenOriginal = ImageIO.read(getClass().getResource(ruta));
+
+            Image imagenTemporal = imagenOriginal.getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+
+            BufferedImage imagenEscalada = new BufferedImage(ancho, alto, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2d = imagenEscalada.createGraphics();
+            g2d.drawImage(imagenTemporal, 0, 0, null);
+            g2d.dispose();
+
+            return new ImageIcon(imagenEscalada);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }  
 
     private void abrirPanelAsig() {
         // Crear el panel

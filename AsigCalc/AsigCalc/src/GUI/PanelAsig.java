@@ -26,9 +26,9 @@ public class PanelAsig extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Asignaturas");
-        setIconImage(new ImageIcon(getClass().getResource("/resources/black.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/resources/book.png")).getImage());
 
-        panel = new BackgroundPanel("/resources/black.png");
+        panel = new BackgroundPanel("/resources/fondo.png");
         panel.setLayout(null);
         this.setContentPane(panel);
         
@@ -47,9 +47,9 @@ public class PanelAsig extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Asignaturas");
-        setIconImage(new ImageIcon(getClass().getResource("/resources/black.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/resources/book.png")).getImage());
 
-        panel = new BackgroundPanel("/resources/black.png");
+        panel = new BackgroundPanel("/resources/fondo.png");
         panel.setLayout(null);
         this.setContentPane(panel);
 
