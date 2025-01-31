@@ -4,10 +4,8 @@ import Main.Asignatura;
 import Main.Prueba;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import javax.swing.table.DefaultTableCellRenderer;
 
 public class PanelTablaPruebas extends JPanel {
     private DefaultTableModel modeloExamenes;
@@ -17,7 +15,7 @@ public class PanelTablaPruebas extends JPanel {
         setLayout(new BorderLayout()); 
         setPreferredSize(new Dimension(500, 150)); 
 
-        String[] columnasExamenes = {"Nombre", "Nota", "Estado"};
+        String[] columnasExamenes = {"Nombre","Ponderacion (%)", "Nota Minima", "Nota", "Estado"};
         modeloExamenes = new DefaultTableModel(columnasExamenes, 0);
         tablaExamenes = new JTable(modeloExamenes);
         tablaExamenes.setRowHeight(18);
@@ -48,7 +46,7 @@ public class PanelTablaPruebas extends JPanel {
         setPreferredSize(new Dimension(500, 150)); 
         setBackground(Color.DARK_GRAY); // Solo para ver si se dibuja
 
-        String[] columnasExamenes = {"Nombre", "Nota", "Estado"};
+        String[] columnasExamenes = {"Nombre","Ponderacion (%)", "Nota Minima", "Nota", "Estado"};
         modeloExamenes = new DefaultTableModel(columnasExamenes, 0);
         tablaExamenes = new JTable(modeloExamenes);
         tablaExamenes.setRowHeight(20);
@@ -68,12 +66,14 @@ public class PanelTablaPruebas extends JPanel {
         
         tablaExamenes.setIntercellSpacing(new Dimension(0, 0));
 
-        tablaExamenes.getColumnModel().getColumn(2).setCellRenderer(new EstadoCellRenderer());
+        tablaExamenes.getColumnModel().getColumn(4).setCellRenderer(new EstadoCellRenderer());
 
         JScrollPane scrollExamenes = new JScrollPane(tablaExamenes);
         add(scrollExamenes, BorderLayout.CENTER);
 
         actualizarTabla(asignaturaSeleccionada);
+        modeloExamenes.fireTableDataChanged();
+
     }
 
     public void actualizarTabla(Asignatura asignaturaSeleccionada) {
@@ -82,33 +82,42 @@ public class PanelTablaPruebas extends JPanel {
         for (Prueba examen : asignaturaSeleccionada.getPruebas()) {
             modeloExamenes.addRow(new Object[]{
                 examen.getNombre(),
+                examen.getPonderacion(),
+                examen.getNotaMin(),
                 examen.getNota(),
                 examen.getEstado().toString()
             });
         }
+
+        tablaExamenes.getColumnModel().getColumn(4).setCellRenderer(new EstadoCellRenderer());
+        modeloExamenes.fireTableDataChanged();
     }
 
-    class EstadoCellRenderer implements TableCellRenderer {
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            JLabel label = new JLabel(value.toString(), SwingConstants.CENTER);
-            label.setOpaque(true);
 
-            if (value != null) {
-                if (value.toString().equals("APROBADA")) {
-                    label.setBackground(new Color(144, 238, 144)); // Fondo verde más suave (Light Green)
-                } else if (value.toString().equals("SUSPENSA")) {
-                    label.setBackground(new Color(255, 204, 203)); // Fondo rojo más suave (Light Red)
-                } else {
-                    label.setBackground(Color.WHITE); // Fondo blanco si no tiene estado
-                }
+class EstadoCellRenderer extends DefaultTableCellRenderer {
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+        if (value != null) {
+            switch (value.toString()) {
+                case "APROBADA":
+                    setBackground(new Color(144, 238, 144));
+                    break;
+                case "SUSPENSA":
+                    setBackground(new Color(255, 204, 203));
+                    break;
+                default:
+                    setBackground(Color.WHITE);
+                    break;
             }
-
-            label.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.BLACK)); // Solo borde abajo y derecha
-
-            label.setForeground(Color.BLACK);
-
-            return label;
         }
+
+        setHorizontalAlignment(SwingConstants.CENTER);
+        setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.BLACK));
+
+        return this;
     }
+}
+
 }

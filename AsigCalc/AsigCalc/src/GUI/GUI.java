@@ -22,13 +22,13 @@ public class GUI extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("NotasPro");
-        setIconImage(new ImageIcon(getClass().getResource("/resources/book.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/resources/logo.png")).getImage());
 
         colocarPanelMain();
     }
 
     private void colocarPanelMain() {
-        panel = new BackgroundPanel("/resources/fondo.png");
+        panel = new BackgroundPanel("/resources/fonodo6.png");
         panel.setLayout(null);
         this.setContentPane(panel);
 
@@ -42,6 +42,12 @@ public class GUI extends JFrame {
         etiqueta.setForeground(Color.white);
         etiqueta.setFont(new Font("Times New Roman", Font.BOLD, 60));
         panel.add(etiqueta);
+        
+        JLabel etiqueta1 = new JLabel("anxelito.com ©", SwingConstants.CENTER);
+        etiqueta1.setBounds(170, 380, 100, 20);
+        etiqueta1.setForeground(Color.gray);
+        etiqueta1.setFont(new Font("Times New Roman", Font.BOLD, 15));
+        panel.add(etiqueta1);
     }
 
     private void colocarBotonesMain() {

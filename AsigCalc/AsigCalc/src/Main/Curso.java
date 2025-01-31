@@ -5,5 +5,7 @@ public enum Curso {
     PRIMERO,
     SEGUNDO,
     TERCERO,
-    CUARTO
+    CUARTO,
+    QUINTO,
+    SEXTO
 }

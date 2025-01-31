@@ -75,7 +75,7 @@ public class Asignatura implements Serializable {
     }
     
     public void creditos() {
-        
+        ECTS_Total = 0;
         for (Asignatura asig : asignaturas) {
             if (asig.getEstado().equals(Estado.APROBADA)) {
                 ECTS_Total += asig.ECTS;
@@ -83,7 +83,7 @@ public class Asignatura implements Serializable {
         }
     }
 
-    public double getCreditos (){
+    public int getCreditos (){
         return ECTS_Total;
     }
     

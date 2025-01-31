@@ -29,7 +29,7 @@ public class PanelAsig extends JFrame {
         setTitle("Asignaturas");
         setIconImage(new ImageIcon(getClass().getResource("/resources/logo.png")).getImage());
 
-        panel = new BackgroundPanel("/resources/fondo.png");
+        panel = new BackgroundPanel("/resources/fonodo6.png");
         panel.setLayout(null);
         this.setContentPane(panel);
         
@@ -50,7 +50,7 @@ public class PanelAsig extends JFrame {
         setTitle("Asignaturas");
         setIconImage(new ImageIcon(getClass().getResource("/resources/logo.png")).getImage());
 
-        panel = new BackgroundPanel("/resources/fondo.png");
+        panel = new BackgroundPanel("/resources/fonodo6.png");
         panel.setLayout(null);
         this.setContentPane(panel);
 
@@ -87,6 +87,12 @@ public class PanelAsig extends JFrame {
         etiqueta2.setForeground(Color.white);
         etiqueta2.setFont(new Font("Times New Roman", Font.BOLD, 15));
         panel.add(etiqueta2);
+        
+        JLabel etiqueta3 = new JLabel("anxelito.com ©", SwingConstants.CENTER);
+        etiqueta3.setBounds(270, 590, 100, 20);
+        etiqueta3.setForeground(Color.gray);
+        etiqueta3.setFont(new Font("Times New Roman", Font.BOLD, 15));
+        panel.add(etiqueta3);
     }
 
     private void colocarBotonesAsig(JFrame ventanaAnterior) {
