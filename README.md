@@ -28,7 +28,7 @@ Descarga la ultima version y ejecute el instalador.
 ![image1](https://github.com/user-attachments/assets/970bfa67-f8d7-4fe0-95ba-008a1069313b)
 
 ## Autor
-Angel Molinero - Creador y Desarrollador principal
+Angel Molinero - Creador y Desarrollador
 
 ## Licencia
 Este proyecto está bajo la licencia MIT. Puedes ver más detalles en el archivo LICENSE.
