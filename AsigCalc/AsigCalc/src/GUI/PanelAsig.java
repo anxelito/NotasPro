@@ -393,15 +393,37 @@ public class PanelAsig extends JFrame {
         cbAsig.setBounds(120, 20, 200, 25);
         nuevaVentana.add(cbAsig);
         Asignatura asig = (Asignatura) cbAsig.getSelectedItem();
-        
+
+
         // Prueba
-        JLabel lblPrueba = new JLabel("Asignatura:");
+        JLabel lblPrueba = new JLabel("Prueba:");
         lblPrueba.setBounds(20, 60, 80, 25);
         nuevaVentana.add(lblPrueba);
 
-        JComboBox<Prueba> cbPrueba = new JComboBox<>(asig.getPruebas().toArray(new Prueba[0]));
+        JComboBox<Prueba> cbPrueba = new JComboBox<>();
         cbPrueba.setBounds(120, 60, 200, 25);
         nuevaVentana.add(cbPrueba);
+
+        // Método para actualizar el JComboBox de pruebas
+        cbAsig.addActionListener(e -> {
+            Asignatura asigSeleccionada = (Asignatura) cbAsig.getSelectedItem();
+            cbPrueba.removeAllItems(); // Elimina las pruebas anteriores
+
+            if (asigSeleccionada != null) {
+                for (Prueba p : asigSeleccionada.getPruebas()) {
+                    cbPrueba.addItem(p);
+                }
+            }
+        });
+
+        // Llenar el JComboBox de pruebas con la asignatura seleccionada inicialmente
+        if (cbAsig.getSelectedItem() != null) {
+            Asignatura asigInicial = (Asignatura) cbAsig.getSelectedItem();
+            for (Prueba p : asigInicial.getPruebas()) {
+                cbPrueba.addItem(p);
+            }
+        }
+
 
         // Nombre de la prueva
         JLabel lblNombre = new JLabel("Nombre:");
